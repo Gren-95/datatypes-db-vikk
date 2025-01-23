@@ -1,0 +1,57 @@
+erDiagram
+    DRIVERS {
+        int id PK "Unikaalne identifikaator iga juhi jaoks"
+        string name "Juhi nimi"
+        string license_number "Unikaalne litsentsinumber"
+        string phone_number "Telefoninumber"
+        string email "E-posti aadress"
+        date hire_date "Tööle asumise kuupäev"
+    }
+
+    VEHICLES {
+        int id PK "Unikaalne identifikaator iga sõiduki jaoks"
+        int driver_id FK "Võõrvõti, mis viitab juhile"
+        string make "Sõiduki mark"
+        string model "Sõiduki mudel"
+        year year "Tootmisaasta"
+        string license_plate "Sõiduki registreerimisnumber"
+    }
+
+    ORDERS {
+        int id PK "Unikaalne identifikaator iga tellimuse jaoks"
+        int customer_id FK "Võõrvõti, mis viitab kliendile"
+        int vehicle_id FK "Võõrvõti, mis viitab sõidukile"
+        datetime order_date "Tellimuse kuupäev ja kellaaeg"
+        string pickup_location "Korjamise asukoht"
+        string dropoff_location "Kohaletoimetamise asukoht"
+        enum status "Tellimuse olek"
+    }
+
+    CLIENT_FEEDBACK {
+        int id PK "Unikaalne identifikaator iga tagasiside jaoks"
+        int order_id FK "Võõrvõti, mis viitab tellimusele"
+        text feedback "Tagasiside tekst"
+        datetime created_at "Tagasiside loomise ajamärk"
+    }
+
+    RATINGS {
+        int id PK "Unikaalne identifikaator iga hinnangu jaoks"
+        int order_id FK "Võõrvõti, mis viitab tellimusele"
+        int rating "Hinnangu väärtus"
+        datetime created_at "Hinnangu loomise ajamärk"
+    }
+
+    ROUTE {
+        int id PK "Unikaalne identifikaator iga marsruudi jaoks"
+        int order_id FK "Võõrvõti, mis viitab tellimusele"
+        text route_description "Marsruudi kirjeldus"
+        decimal distance "Marsruudi kaugus"
+        int estimated_time "Hinnanguline aeg minutites"
+    }
+
+    %% Relationships
+    DRIVERS ||--o{ VEHICLES : "omab"
+    VEHICLES ||--o{ ORDERS : "kasutatakse"
+    ORDERS ||--o{ CLIENT_FEEDBACK : "saab"
+    ORDERS ||--o{ RATINGS : "hinnatakse"
+    ORDERS ||--o{ ROUTE : "moodustab"
