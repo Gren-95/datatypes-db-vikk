@@ -12,6 +12,10 @@ The following entities are included in the database schema:
   
 - **VEHICLES**: Stores details about the vehicles used in the taxi service, including a unique identifier, driver association, make, model, manufacturing year, and license plate number.
   
+- **VEHICLE_MAKES**: Contains unique identifiers and names for vehicle makes, allowing for better normalization of vehicle data.
+  
+- **VEHICLE_MODELS**: Contains unique identifiers, names for vehicle models, and foreign keys linking to the corresponding vehicle make.
+  
 - **ORDERS**: Represents customer orders, linking to clients and vehicles, and includes order date, pickup and dropoff locations, and order status.
   
 - **CLIENT_FEEDBACK**: Captures feedback from clients regarding their orders, including the feedback text and creation timestamp.
@@ -28,6 +32,8 @@ The relationships between the entities are defined as follows:
 - A vehicle can be used for multiple orders.
 - An order can receive multiple pieces of client feedback and ratings.
 - An order can have a defined route.
+- A vehicle make can have multiple models associated with it.
+- Each vehicle now references a make and a model through foreign keys, improving data integrity and organization.
 
 ## Usage
 

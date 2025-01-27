@@ -8,11 +8,22 @@ erDiagram
         date hire_date "Tööle asumise kuupäev"
     }
 
+    VEHICLE_MAKES {
+        int id PK "Unikaalne identifikaator iga sõiduki marki jaoks"
+        string make "Sõiduki mark"
+    }
+
+    VEHICLE_MODELS {
+        int id PK "Unikaalne identifikaator iga sõiduki mudeli jaoks"
+        string model "Sõiduki mudel"
+        int make_id FK "Võõrvõti, mis viitab sõiduki margile"
+    }
+
     VEHICLES {
         int id PK "Unikaalne identifikaator iga sõiduki jaoks"
         int driver_id FK "Võõrvõti, mis viitab juhile"
-        string make "Sõiduki mark"
-        string model "Sõiduki mudel"
+        int make_id FK "Võõrvõti, mis viitab sõiduki margile"
+        int model_id FK "Võõrvõti, mis viitab sõiduki mudelile"
         year year "Tootmisaasta"
         string license_plate "Sõiduki registreerimisnumber"
     }
@@ -51,6 +62,8 @@ erDiagram
 
     %% Relationships
     DRIVERS ||--o{ VEHICLES : "omab"
+    VEHICLE_MAKES ||--o{ VEHICLE_MODELS : "omab"
+    VEHICLE_MODELS ||--o{ VEHICLES : "kasutatakse"
     VEHICLES ||--o{ ORDERS : "kasutatakse"
     ORDERS ||--o{ CLIENT_FEEDBACK : "saab"
     ORDERS ||--o{ RATINGS : "hinnatakse"
