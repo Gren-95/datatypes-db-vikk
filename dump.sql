@@ -54,27 +54,64 @@ INSERT INTO `drivers` (`name`, `license_number`, `phone_number`, `email`, `hire_
 
 -- --------------------------------------------------------
 
--- Tabeli struktuur `vehicles`
+-- Tabeli struktuur `vehicle_makes`
+CREATE TABLE `vehicle_makes` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unikaalne identifikaator iga sõiduki marki jaoks.',
+  `make` varchar(50) NOT NULL COMMENT 'Sõiduki mark, lubades kuni 50 tähemärki.',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `make` (`make`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Tabeli struktuur `vehicle_models`
+CREATE TABLE `vehicle_models` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unikaalne identifikaator iga sõiduki mudeli jaoks.',
+  `model` varchar(50) NOT NULL COMMENT 'Sõiduki mudel, lubades kuni 50 tähemärki.',
+  `make_id` int(11) UNSIGNED NOT NULL COMMENT 'Võõrvõti, mis viitab sõiduki margile.',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`make_id`) REFERENCES `vehicle_makes`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Muuda tabeli struktuur `vehicles`
 CREATE TABLE `vehicles` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unikaalne identifikaator iga sõiduki jaoks.',
-  `driver_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Võõrvõti, mis viitab juhile, võib olla NULL, kui ei ole määratud. TINYINT oleks liiga väike.',
-  `make` varchar(50) NOT NULL COMMENT 'Sõiduki mark, lubades kuni 50 tähemärki. CHAR oleks raiskav.',
-  `model` varchar(50) NOT NULL COMMENT 'Sõiduki mudel, lubades kuni 50 tähemärki. CHAR oleks raiskav.',
-  `year` year(4) NOT NULL COMMENT 'Tootmisaasta, kasutades 4 numbrit aasta esindamiseks. TINYINT oleks liiga väike.',
-  `license_plate` varchar(10) NOT NULL COMMENT 'Sõiduki registreerimisnumber, lubades kuni 10 tähemärki. CHAR oleks raiskav.',
+  `driver_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Võõrvõti, mis viitab juhile, võib olla NULL, kui ei ole määratud.',
+  `make_id` int(11) UNSIGNED NOT NULL COMMENT 'Võõrvõti, mis viitab sõiduki margile.',
+  `model_id` int(11) UNSIGNED NOT NULL COMMENT 'Võõrvõti, mis viitab sõiduki mudelile.',
+  `year` year(4) NOT NULL COMMENT 'Tootmisaasta, kasutades 4 numbrit aasta esindamiseks.',
+  `license_plate` varchar(10) NOT NULL COMMENT 'Sõiduki registreerimisnumber, lubades kuni 10 tähemärki.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `license_plate` (`license_plate`),
   KEY `driver_id` (`driver_id`),
-  FOREIGN KEY (`driver_id`) REFERENCES `drivers`(`id`) ON DELETE SET NULL
+  KEY `make_id` (`make_id`),
+  KEY `model_id` (`model_id`),
+  FOREIGN KEY (`driver_id`) REFERENCES `drivers`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`make_id`) REFERENCES `vehicle_makes`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`model_id`) REFERENCES `vehicle_models`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Andmete dumpimine tabelis `vehicles`
-INSERT INTO `vehicles` (`driver_id`, `make`, `model`, `year`, `license_plate`) VALUES
-(1, 'Toyota', 'Camry', 2020, 'ABC123'),
-(2, 'Honda', 'Civic', 2019, 'XYZ456'),
-(1, 'Ford', 'Focus', 2021, 'LMN789'),
-(3, 'Chevrolet', 'Malibu', 2020, 'DEF012'),
-(4, 'Nissan', 'Altima', 2018, 'GHI345');
+-- Andmete dumpimine tabelis `vehicle_makes`
+INSERT INTO `vehicle_makes` (`make`) VALUES
+('Toyota'),
+('Honda'),
+('Ford'),
+('Chevrolet'),
+('Nissan');
+
+-- Andmete dumpimine tabelis `vehicle_models`
+INSERT INTO `vehicle_models` (`model`, `make_id`) VALUES
+('Camry', 1),
+('Civic', 2),
+('Focus', 3),
+('Malibu', 4),
+('Altima', 5);
+
+-- Muuda andmete dumpimine tabelis `vehicles`
+INSERT INTO `vehicles` (`driver_id`, `make_id`, `model_id`, `year`, `license_plate`) VALUES
+(1, 1, 1, 2020, 'ABC123'),
+(2, 2, 2, 2019, 'XYZ456'),
+(1, 3, 3, 2021, 'LMN789'),
+(3, 4, 4, 2020, 'DEF012'),
+(4, 5, 5, 2018, 'GHI345');
 
 -- --------------------------------------------------------
 
